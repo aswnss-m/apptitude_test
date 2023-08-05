@@ -2,7 +2,8 @@ import React from 'react'
 
 function Landingpage() {
   return (
-    <div>
+    <div className='flex h-screen items-center'>
+        <h1>Something</h1>
     </div>
   )
 }
