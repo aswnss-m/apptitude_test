@@ -1,9 +1,12 @@
 import { useState } from 'react'
 import './assets/App.css'
+import {Routes, Route} from "react-router-dom"
+
 import Navbar from './components/Navbar'
 import Auth from './Pages/Auth'
 import Landingpage from './Pages/Landingpage'
-import {Routes, Route} from "react-router-dom"
+import Test from './Pages/Test'
+
 function App() {
 
   return (
@@ -14,6 +17,7 @@ function App() {
       <Route path="/" element={sessionStorage.getItem('email') ? <Landingpage /> : <Auth />} />
       <Route path="/auth" element={<Auth />} />
       <Route path="/landingpage" element={<Landingpage />} /> 
+      <Route path="/test/:id" element={<Test />} />
     </Routes>
     </>
   )
