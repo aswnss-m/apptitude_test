@@ -1,0 +1,24 @@
+:root{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+html{
+    font-family: 'Inter', sans-serif;
+    width: 100vw;
+    min-height: 100vh;
+}
+body{
+    width: 100%;
+}
+
+
+.regular{
+    font-weight: 400;
+}
+.medium{
+    font-weight: 512;
+}
+.heading{
+    font-weight: 645;
+}
