@@ -26,3 +26,6 @@ body{
 .heading{
     font-weight: 645;
 }
+::-webkit-scrollbar{
+    width: 0.001px;
+}
