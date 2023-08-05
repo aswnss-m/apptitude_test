@@ -23,13 +23,24 @@ function Test() {
 
   const handleAnswerSubmit = () => {
     if (selectedOption !== '') {
+      const questionId = parseInt(id);
+      const answer = {
+        questionId: questionId,
+        selectedOption: selectedOption
+      };
+  
+      const attendedQuestionsList = JSON.parse(sessionStorage.getItem('attendedQuestions')) || [];
+      attendedQuestionsList.push(answer);
+      sessionStorage.setItem('attendedQuestions', JSON.stringify(attendedQuestionsList));
+  
       setAttendedQuestions(new Set(attendedQuestions).add(currentQuestion));
       setSelectedOption('');
+  
       const nextQuestion = currentQuestion + 1;
       if (nextQuestion < questions[id].length) {
         setCurrentQuestion(nextQuestion);
       } else {
-        nav(`/test/${parseInt(id) + 1}`);
+        nav(`/test/${questionId + 1}`);
       }
     }
   };
@@ -38,7 +49,7 @@ function Test() {
     <div className='flex px-4 py-2 min-h-screen'>
       <div className="grid grid-cols-4 grid-rows-5 gap-4 p-4">
         <div className="col-span-3 flex flex-col gap-2">
-          <p>Question No: {currentQuestion + 1}</p>
+          <p>Question No: {parseInt(id) + 1}</p>
           <p className='text-xl medium'>
             {questions[id].question}
           </p>
