@@ -1,10 +1,25 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect} from 'react';
 import { useParams } from 'react-router-dom';
 import TimerApp from '../components/TimerApp';
 import { questions } from '../constants';
 import { useNavigate } from 'react-router-dom';
 
 function Test() {
+
+  const handleTabSwitching = (event) => {
+    if (event.key === 'Tab') {
+      event.preventDefault();
+    }
+  };
+
+  useEffect(() => {
+    document.addEventListener('visibilitychange', ()=>{
+      document.title = document.hidden ? 'You are away' : 'You are back';
+    });
+    
+  }, []);
+
+
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [selectedOption, setSelectedOption] = useState('');
   const [attendedQuestions, setAttendedQuestions] = useState(new Set());
@@ -111,6 +126,9 @@ function Test() {
           >
             Submit
           </button>
+        </div>
+        <div className="col-start-4 row-span-2 col-span-2 row-start-3 w-full h-full bg-red-900">
+
         </div>
       </div>
     </div>
