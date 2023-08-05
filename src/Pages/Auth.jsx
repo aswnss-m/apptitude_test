@@ -8,7 +8,7 @@ function Auth() {
     e.preventDefault();
     console.log(email);
     if (emails.some((item) => item.email === email)) {
-      localStorage.setItem('email', email);
+      sessionStorage.setItem('email', email);
       window.location.reload();
     } else {
       alert('Email not found');

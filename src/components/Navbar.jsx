@@ -3,8 +3,8 @@ import React, { useEffect, useState } from 'react'
 function Navbar() {
     const [email, setEmail] = useState(null);
     useEffect(() => {
-        if (localStorage.getItem('email')) {
-            setEmail(localStorage.getItem('email'))
+        if (sessionStorage.getItem('email')) {
+            setEmail(sessionStorage.getItem('email'))
         }
         else {
             setEmail(null)
