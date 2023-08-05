@@ -4,11 +4,11 @@ import TimerApp from '../components/TimerApp';
 import { questions } from '../constants';
 import { useNavigate } from 'react-router-dom';
 
-
 function Test() {
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [selectedOption, setSelectedOption] = useState('');
   const [attendedQuestions, setAttendedQuestions] = useState(new Set());
+  const [qids, setQIds] = useState(new Set());
   const { id } = useParams();
   const nav = useNavigate();
 
@@ -28,14 +28,14 @@ function Test() {
         questionId: questionId,
         selectedOption: selectedOption
       };
-  
+      setQIds(new Set([...qids, questionId]));
       const attendedQuestionsList = JSON.parse(sessionStorage.getItem('attendedQuestions')) || [];
       attendedQuestionsList.push(answer);
       sessionStorage.setItem('attendedQuestions', JSON.stringify(attendedQuestionsList));
-  
+
       setAttendedQuestions(new Set(attendedQuestions).add(currentQuestion));
       setSelectedOption('');
-  
+
       const nextQuestion = currentQuestion + 1;
       if (nextQuestion < questions[id].length) {
         setCurrentQuestion(nextQuestion);
@@ -64,7 +64,7 @@ function Test() {
               <button
                 key={index}
                 className={`rounded-full w-8 h-8 m-1 ${
-                  attendedQuestions.has(index) ? 'bg-green-500' : 'bg-gray-500'
+                  qids.has(index) ? 'bg-green-500' : 'bg-gray-500'
                 }`}
                 onClick={() => handleQuestionChange(index)}
               >
