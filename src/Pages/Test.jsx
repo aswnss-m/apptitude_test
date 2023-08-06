@@ -70,7 +70,7 @@ function Test() {
           </p>
         </div>
         <div className="col-start-4">
-          <TimerApp timerDuration={20} />
+          <TimerApp timerDuration={600} />
         </div>
         <div className="row-span-4 col-start-4 row-start-2">
           <p>Question Palette</p>
