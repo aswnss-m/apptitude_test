@@ -55,12 +55,16 @@ const handleFullScreen = () =>{
     setShowModal(false);
   };
   const nav = useNavigate();
-  const handleAgree = () =>{
+  const handleAgree = () => {
     if (cameraPermission && fullscreenPermission) {
       console.log('Terms accepted and camera permission granted');
+      
+      // Remove the stored attendedQuestions data from sessionStorage
+      sessionStorage.removeItem('attendedQuestions');
+  
       nav('/test/0');
-  }
-  }
+    }
+  };
   return (
     <div className="flex flex-col w-screen items-center">
      <div className="flex flex-col gap-5 text-center items-center min-h-screen justify-center w-90">
@@ -127,10 +131,8 @@ const handleFullScreen = () =>{
 
 </div>
         )}
-     </div>
-      
+     </div>   
     </div>
   );
-}
-
+       }
 export default Landingpage

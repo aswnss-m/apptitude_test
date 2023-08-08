@@ -6,30 +6,20 @@ import { useNavigate } from 'react-router-dom';
 
 function Test() {
 
-  const handleTabSwitching = (event) => {
-    if (event.key === 'Tab') {
-      event.preventDefault();
-    }
-  };
-
-  useEffect(() => {
-    const handleVisibilityChange = () => {
-      if (document.hidden) {
-        alert('You are not allowed to switch tabs');
-      } else {
-        // document.title = 'You are back';
-        console.log('You are back');
-      }
-    };
-  }, [])
-
-
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [selectedOption, setSelectedOption] = useState('');
   const [attendedQuestions, setAttendedQuestions] = useState(new Set());
   const [qids, setQIds] = useState(new Set());
   const { id } = useParams();
   const nav = useNavigate();
+
+  // Retrieve attended questions from session storage on mount
+  useEffect(() => {
+    const attendedQuestionsList = JSON.parse(sessionStorage.getItem('attendedQuestions')) || [];
+    const attendedSet = new Set(attendedQuestionsList.map(answer => answer.questionId));
+    setAttendedQuestions(attendedSet);
+    setQIds(new Set(attendedSet));
+  }, []);
 
   const handleOptionChange = (event) => {
     setSelectedOption(event.target.value);
@@ -47,23 +37,34 @@ function Test() {
         questionId: questionId,
         selectedOption: selectedOption
       };
-      setQIds(new Set([...qids, questionId]));
+
+      const newQIds = new Set(qids);
+      newQIds.add(questionId);
+      setQIds(newQIds);
+
       const attendedQuestionsList = JSON.parse(sessionStorage.getItem('attendedQuestions')) || [];
       attendedQuestionsList.push(answer);
       sessionStorage.setItem('attendedQuestions', JSON.stringify(attendedQuestionsList));
 
-      setAttendedQuestions(new Set(attendedQuestions).add(currentQuestion));
+      setAttendedQuestions(new Set(attendedQuestionsList.map(answer => answer.questionId)));
       setSelectedOption('');
 
       const nextQuestion = currentQuestion + 1;
-      if (nextQuestion < questions[id].length) {
+      const totalQuestions = questions.length;
+
+      if (nextQuestion < totalQuestions) {
         setCurrentQuestion(nextQuestion);
+        nav(`/test/${nextQuestion}`);
       } else {
-        nav(`/test/${questionId + 1}`);
+        const allQuestionsAnswered = attendedQuestions.size === totalQuestions;
+        if (allQuestionsAnswered) {
+          nav('/test/success');
+        }
       }
     }
   };
 
+  
   return (
     <div className='flex px-4 py-2 min-h-screen'>
       <div className="grid grid-cols-4 grid-rows-5 gap-4 p-4">
