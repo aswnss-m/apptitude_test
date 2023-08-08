@@ -56,9 +56,9 @@ function Test() {
         setCurrentQuestion(nextQuestion);
         nav(`/test/${nextQuestion}`);
       } else {
-        const allQuestionsAnswered = attendedQuestions.size === totalQuestions;
+        const allQuestionsAnswered = attendedQuestions.size === totalQuestions-1;
         if (allQuestionsAnswered) {
-          nav('/test/success');
+          nav('/test/success'); 
         }
       }
     }
