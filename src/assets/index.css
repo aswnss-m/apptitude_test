@@ -6,6 +6,19 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+    
+    --primary-color: #FFFFFF;
+    --secondary-color: #170F49;
+    --tertiary-color: #4A3AFF;
+    --quaternary-color: #6F6C90;
+
+    --text-size-xl :50px;
+    --text-size-l :36px;
+    --text-size-m: 28px;
+    --text-size-s: 16px;
+
+    --letter-spacing-l: 0.24rem;
+
 }
 html{
     font-family: 'Inter', sans-serif;
