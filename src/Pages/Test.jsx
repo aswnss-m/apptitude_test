@@ -13,11 +13,15 @@ function Test() {
   };
 
   useEffect(() => {
-    document.addEventListener('visibilitychange', ()=>{
-      document.title = document.hidden ? 'You are away' : 'You are back';
-    });
-    
-  }, []);
+    const handleVisibilityChange = () => {
+      if (document.hidden) {
+        alert('You are not allowed to switch tabs');
+      } else {
+        // document.title = 'You are back';
+        console.log('You are back');
+      }
+    };
+  }, [])
 
 
   const [currentQuestion, setCurrentQuestion] = useState(0);
@@ -78,8 +82,8 @@ function Test() {
             {questions.map((q, index) => (
               <button
                 key={index}
-                className={`rounded-full w-8 h-8 m-1 ${
-                  qids.has(index) ? 'bg-green-500' : 'bg-gray-500'
+                className={`rounded-full text-primary w-8 h-8 m-1 ${
+                  qids.has(index) ? 'bg-tertiary' : 'bg-secondary'
                 }`}
                 onClick={() => handleQuestionChange(index)}
               >
@@ -95,8 +99,8 @@ function Test() {
                 key={index}
                 className={`bg-gray-300 py-2 rounded transition-all duration-500 flex-grow ${
                   selectedOption === option
-                    ? 'bg-green-500'
-                    : 'hover:bg-gray-200'
+                    ? 'bg-tertiary text-primary'
+                    : 'hover:bg[#fdfdfd]'
                 }`}
                 htmlFor={`option${index}`}
               >
@@ -115,13 +119,13 @@ function Test() {
           </div>
         </div>
         <div className="col-span-2 row-start-5">
-          <button className='bg-red-400 hover:bg-red-300 w-full p-3 rounded'>
+          <button className='border border-tertiary w-full p-3 rounded'>
             Reset
           </button>
         </div>
         <div className="col-start-3 row-start-5">
           <button
-            className='bg-green-400 hover:bg-green-300 w-full p-3 rounded'
+            className='bg-tertiary font-bold text-primary hover:bg-green-300 w-full p-3 rounded'
             onClick={handleAnswerSubmit}
           >
             Submit
