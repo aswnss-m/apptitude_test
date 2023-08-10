@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import Logo from "../assets/Logo-SSW.svg";
+import Logo from "../assets/logo.svg";
 function Navbar() {
     const [email, setEmail] = useState(null);
     useEffect(() => {
