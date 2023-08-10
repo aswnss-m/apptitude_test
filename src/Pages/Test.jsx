@@ -124,7 +124,7 @@ function Test() {
             // remove the selected option
             setSelectedOption('');
           }}>
-            Reset
+            Clear
           </button>
         </div>
         <div className="col-start-3 row-start-5">
