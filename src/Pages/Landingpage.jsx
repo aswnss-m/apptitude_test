@@ -70,7 +70,7 @@ const handleFullScreen = () =>{
      <div className="flex flex-col gap-5 text-center items-center min-h-screen justify-center w-90">
        <h1 className='text-5xl font-bold w-90'>Discover a new level of candidate assessment</h1>
        <p className='text-gray w-90'>your gateway to evaluating skills and potential. This meticulously crafted assessment is designed to gauge candidates' abilities across a spectrum of aptitudes.</p>
-       <button className='btn bg-tertiary text-primary p-4 rounded-lg font-bold w-1/3' onClick={openModal}>Start</button>
+       {showModal?<></>:(<button className='btn bg-tertiary text-primary p-4 rounded-lg font-bold w-1/3' onClick={openModal}>Start</button>)}
        {showModal && (
         <div className="flex flex-col text-left w-10/12">
       <h2 className='text-center text-2xl font-bold underline my-4'>Terms and Conditions</h2>

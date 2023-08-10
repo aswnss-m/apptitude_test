@@ -120,7 +120,10 @@ function Test() {
           </div>
         </div>
         <div className="col-span-2 row-start-5">
-          <button className='border border-tertiary w-full p-3 rounded'>
+          <button className='border border-tertiary w-full p-3 rounded' onClick={()=>{
+            // remove the selected option
+            setSelectedOption('');
+          }}>
             Reset
           </button>
         </div>
