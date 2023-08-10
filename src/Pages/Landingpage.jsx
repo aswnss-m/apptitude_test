@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 
 function Landingpage() {
   const [showModal, setShowModal] = useState(false); // State to control modal visibility
-  const [cameraPermission, setCameraPermission] = useState(true);
+  const [cameraPermission, setCameraPermission] = useState(false);
   const [termsAccepted, setTermsAccepted] = useState(false);
   const [fullscreenPermission, setFullscreenPermission] = useState(false);
 
