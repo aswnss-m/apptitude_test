@@ -1,55 +1,37 @@
-// import React, { useState } from "react";
-import React, { useState, useRef, useEffect } from "react";
-import TandCmodal from "../components/TandCmodal";
-import { useNavigate } from "react-router-dom";
+import React, { useState, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useRecordWebcam } from 'react-record-webcam';
 
 function Landingpage() {
-  const [showModal, setShowModal] = useState(false); // State to control modal visibility
+  const [showModal, setShowModal] = useState(false);
   const [cameraPermission, setCameraPermission] = useState(false);
-  const [termsAccepted, setTermsAccepted] = useState(false);
   const [fullscreenPermission, setFullscreenPermission] = useState(false);
-  const [cameraStream, setCameraStream] = useState(null);
-  const videoRef = useRef(null);
+  const recordWebcam = useRecordWebcam({ frameRate: 30 });
+  const navigate = useNavigate();
 
   const handleCameraPermissionChange = () => {
     if (!cameraPermission) {
-      navigator.mediaDevices
-        .getUserMedia({ video: true, audio: true })
-        .then((stream) => {
-          console.log("Camera and microphone permissions granted");
-          setCameraPermission(true);
-          setCameraStream(stream);
-        })
-        .catch((error) => {
-          console.log("Camera and microphone permissions denied:", error);
-          setCameraPermission(false);
-        });
+      recordWebcam.open();
     } else {
-      setCameraPermission(false);
-      setCameraStream(null);
+      recordWebcam.close();
     }
+    setCameraPermission(!cameraPermission);
   };
 
   const handleFullScreen = () => {
-    const element = document.documentElement; // Get the root element (usually <html>)
-
+    const element = document.documentElement;
     if (element.requestFullscreen) {
       element.requestFullscreen();
-      setFullscreenPermission(true);
     } else if (element.mozRequestFullScreen) {
-      // For Firefox
       element.mozRequestFullScreen();
-      setFullscreenPermission(true);
     } else if (element.webkitRequestFullscreen) {
-      // For Chrome, Safari and Opera
       element.webkitRequestFullscreen();
-      setFullscreenPermission(true);
     } else if (element.msRequestFullscreen) {
-      // For Internet Explorer and Edge
       element.msRequestFullscreen();
-      setFullscreenPermission(true);
     }
+    setFullscreenPermission(true);
   };
+
   const openModal = () => {
     setShowModal(true);
   };
@@ -57,25 +39,14 @@ function Landingpage() {
   const closeModal = () => {
     setShowModal(false);
   };
-  const nav = useNavigate();
+
   const handleAgree = () => {
     if (cameraPermission && fullscreenPermission) {
-      console.log("Terms accepted and camera permission granted");
-
-      // Remove the stored attendedQuestions data from sessionStorage
-      sessionStorage.removeItem("attendedQuestions");
-
-      nav("/test/0");
+      console.log('Terms accepted and camera permission granted');
+      recordWebcam.close()
+      navigate('/test/0'); // Navigate to the test page
     }
   };
-
-  useEffect(() => {
-    if (cameraStream && videoRef.current) {
-      videoRef.current.srcObject = cameraStream;
-    } else if (!cameraStream && videoRef.current) {
-      videoRef.current.srcObject = null;
-    }
-  }, [cameraStream]);
 
   return (
     <div className="flex flex-col w-screen items-center">
@@ -198,15 +169,9 @@ function Landingpage() {
           </div>
         )}
       </div>
-      {cameraStream && (
+      {cameraPermission && (
         <div className="fixed bottom-10 right-10 w-48 h-36 border-2 border-gray-300 rounded-md overflow-hidden">
-          <video
-            className="w-full h-full object-cover"
-            ref={videoRef}
-            autoPlay
-            muted
-            playsInline // Added to prevent fullscreen on play
-          />
+          <video ref={recordWebcam.webcamRef} autoPlay muted />
         </div>
       )}
     </div>

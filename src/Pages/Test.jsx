@@ -1,21 +1,42 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { useParams } from 'react-router-dom';
+import { useLocation, useParams } from 'react-router-dom';
 import TimerApp from '../components/TimerApp';
 import { questions } from '../constants';
 import { useNavigate } from 'react-router-dom';
+import { useRecordWebcam } from 'react-record-webcam';
+
 
 function Test() {
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [selectedOption, setSelectedOption] = useState('');
   const [attendedQuestions, setAttendedQuestions] = useState(new Set());
-  const [recording, setRecording] = useState(false);
-  const mediaRecorderRef = useRef(null);
   const [qids, setQIds] = useState(new Set());
-  const [chunks, setChunks] = useState([]);
   const { id } = useParams();
   const [TimerExpired, setTimerExpired] = useState(false)
   const changeTimer=()=>{setTimerExpired(true)}
   const nav = useNavigate();
+   
+
+    const recordWebcam = useRecordWebcam({ frameRate: 60 });
+    const startRecording=()=>{
+      if(recordWebcam.status==='CLOSED'){
+        recordWebcam.open();
+      }
+    }
+
+    const stopRecording=()=>{
+      if(recordWebcam.status==='RECORDING'){
+        recordWebcam.stop();
+        recordWebcam.download();
+      }
+      if(recordWebcam.status==='OPEN'){
+        recordWebcam.close();
+      }
+    }
+    useEffect(() => {
+      startRecording();
+      console.log(recordWebcam.status);
+    }, []);
 
   // Retrieve attended questions from session storage and add event listeners
   useEffect(() => {
@@ -26,45 +47,45 @@ function Test() {
 
     const handleVisibilityChange = () => {
       if (document.hidden) {
-        nav('/test/fail');
+        // nav('/test/fail');
       }
     };
 
     const handleFullScreenChange = () => {
       if (!document.fullscreenElement) {
-        nav('/test/fail');
+        // nav('/test/fail');
       }
     };
-
+    
     document.addEventListener('visibilitychange', handleVisibilityChange);
     document.addEventListener('fullscreenchange', handleFullScreenChange);
 
     return () => {
       document.removeEventListener('visibilitychange', handleVisibilityChange);
       document.removeEventListener('fullscreenchange', handleFullScreenChange);
-      if (mediaRecorderRef.current) {
-        mediaRecorderRef.current.stop();
-        setRecording(false);
-        mediaRecorderRef.current = null;
-      }
+      
     };
-  }, [id, nav, recording]);
+  }, [id, nav]);
 
+// Time expired handler
   useEffect(()=>{
     if(TimerExpired){
       nav('/auth')
     }
   },[TimerExpired])
 
+  // Handle option selection
   const handleOptionChange = (event) => {
     setSelectedOption(event.target.value);
   };
 
+  // Handle question change
   const handleQuestionChange = (index) => {
     setCurrentQuestion(index);
     setSelectedOption('');
   };
-
+  
+  // Handle answer submission
   const handleAnswerSubmit = () => {
     if (selectedOption !== '') {
       const questionId = parseInt(id);
@@ -72,7 +93,7 @@ function Test() {
         questionId: questionId,
         selectedOption: selectedOption
       };
-
+      
       const newQIds = new Set(qids);
       newQIds.add(questionId);
       setQIds(newQIds);
@@ -92,42 +113,15 @@ function Test() {
       } else {
         const allQuestionsAnswered = attendedQuestions.size === totalQuestions - 1;
         if (allQuestionsAnswered) {
-          if (mediaRecorderRef.current) {
-            mediaRecorderRef.current.stop();
-            const blob = new Blob(chunks, { type: 'video/webm' });
-            const videoURL = window.URL.createObjectURL(blob);
-            console.log(videoURL);
-            setRecording(false);
-            setChunks([]);
-            mediaRecorderRef.current = null;
-          }
+          stopRecording();
           nav('/test/success');
         }
       }
     }
   };
 
-  // Recording code
-  useEffect(() => {
-    if (!recording) {
-      if (mediaRecorderRef.current) {
-        mediaRecorderRef.current.stop();
-        mediaRecorderRef.current = null;
-      }
-      const cam = navigator.mediaDevices.getUserMedia({ audio: true, video: true });
-      cam.then((stream) => {
-        const mediaRecorder = new MediaRecorder(stream);
-        mediaRecorderRef.current = mediaRecorder;
-        mediaRecorder.ondataavailable = (e) => {
-          if (e.data.size > 0) {
-            setChunks((prevChunks) => [...prevChunks, e.data]);
-          }
-        };
-        mediaRecorder.start();
-        setRecording(true);
-      });
-    }
-  }, []);
+ 
+ 
   return (
     <div className='flex px-4 py-2 min-h-screen'>
       <div className="grid grid-cols-4 grid-rows-5 gap-4 p-4">
@@ -199,7 +193,7 @@ function Test() {
           </button>
         </div>
         <div className="col-start-4 row-span-2 col-span-2 row-start-3 w-full h-full bg-red-900">
-
+        <video ref={recordWebcam.webcamRef} autoPlay muted /> <br />
         </div>
       </div>
     </div>
