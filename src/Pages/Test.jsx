@@ -15,11 +15,36 @@ function Test() {
 
   // Retrieve attended questions from session storage on mount
   useEffect(() => {
+    // Retrieve attended questions from session storage on mount
     const attendedQuestionsList = JSON.parse(sessionStorage.getItem('attendedQuestions')) || [];
     const attendedSet = new Set(attendedQuestionsList.map(answer => answer.questionId));
     setAttendedQuestions(attendedSet);
     setQIds(new Set(attendedSet));
-  }, []);
+
+    // Add event listener for visibility change
+    const handleVisibilityChange = () => {
+      if (document.hidden) {
+        // User switched tabs, navigate to /test/fail
+        nav('/test/fail');
+      }
+    };
+  
+    const handleFullScreenChange = () => {
+      if (!document.fullscreenElement) {
+        // User exited full screen, navigate to /test/fail
+        nav('/test/fail');
+      }
+    };
+  
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    document.addEventListener('fullscreenchange', handleFullScreenChange);
+  
+    return () => {
+      // Remove the event listeners when component unmounts
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+      document.removeEventListener('fullscreenchange', handleFullScreenChange);
+    };
+  }, [id, nav]);
 
   const handleOptionChange = (event) => {
     setSelectedOption(event.target.value);
