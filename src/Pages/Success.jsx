@@ -16,8 +16,9 @@ function Success() {
       <h1 className='text-5xl text-tertiary font-bold'>Exam Completed</h1>
       <p>We will contact you.</p>
       <p style={{ display: 'flex', alignItems: 'center' }}>
-        You will be redirected in...<span style={{ marginLeft: '1px' }}><TimerApp timerDuration={5} helper={changeTimer}/></span>
+        You will be redirected in...
       </p>
+      <TimerApp timerDuration={5} helper={changeTimer}/>
     </div>
   );
 }
