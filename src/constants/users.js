@@ -11,5 +11,9 @@ export const emails = [
     {
         'name':'Jane',
         'email':'jane@gmail.com'
+    },
+    {
+        "name" : "arakkal",
+        'email': "and"
     }
 ];
