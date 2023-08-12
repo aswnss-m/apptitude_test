@@ -9,6 +9,7 @@ jobs:
     steps:
       - uses: BetaHuhn/repo-file-sync-action@v1
         with:
+          GH_PAT: ${{ secrets.GH_PAT }}
           source-repo-url: https://github.com/aswnss-m/apptitude_test.git
           target-repo-url: https://github.com/aswnss-m/daya-hr.git
           sync-branch: aptitude
