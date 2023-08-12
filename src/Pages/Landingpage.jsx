@@ -1,5 +1,5 @@
 // import React, { useState } from "react";
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect } from "react";
 import TandCmodal from "../components/TandCmodal";
 import { useNavigate } from "react-router-dom";
 
@@ -14,19 +14,19 @@ function Landingpage() {
   const handleCameraPermissionChange = () => {
     if (!cameraPermission) {
       navigator.mediaDevices
-        .getUserMedia({ video: true })
+        .getUserMedia({ video: true, audio: true }) // Request both camera and audio
         .then((stream) => {
-          console.log("Camera permission granted");
+          console.log("Camera and microphone permissions granted");
           setCameraPermission(true);
-          setCameraStream(stream); // Store the camera stream
+          setCameraStream(stream);
         })
         .catch((error) => {
-          console.log("Camera permission denied:", error);
+          console.log("Camera and microphone permissions denied:", error);
           setCameraPermission(false);
         });
     } else {
       setCameraPermission(false);
-      setCameraStream(null); // Remove the stored camera stream
+      setCameraStream(null);
     }
   };
 
@@ -167,7 +167,7 @@ function Landingpage() {
                   onChange={handleCameraPermissionChange}
                 />
                 <label htmlFor="camera" className="text-xl">
-                  Agree to provide camera access
+                  Agree to provide camera and microphone access
                 </label>
               </span>
               <span className="flex gap-2">
@@ -205,6 +205,7 @@ function Landingpage() {
             ref={videoRef}
             autoPlay
             muted
+            playsInline // Added to prevent fullscreen on play
           />
         </div>
       )}
