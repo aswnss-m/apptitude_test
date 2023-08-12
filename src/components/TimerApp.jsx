@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 
-const TimerApp = ({ timerDuration }) => {
+const TimerApp = ({ timerDuration, helper=null }) => {
   const Ref = useRef(null);
   const [timer, setTimer] = useState('00:00:00');
 
@@ -25,6 +25,10 @@ const TimerApp = ({ timerDuration }) => {
           seconds > 9 ? seconds : '0' + seconds
         }`
       );
+    }else{
+      if(helper){
+        helper()
+      }
     }
   };
 

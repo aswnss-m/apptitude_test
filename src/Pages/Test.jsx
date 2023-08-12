@@ -11,6 +11,8 @@ function Test() {
   const [attendedQuestions, setAttendedQuestions] = useState(new Set());
   const [qids, setQIds] = useState(new Set());
   const { id } = useParams();
+  const [TimerExpired, setTimerExpired] = useState(false)
+  const changeTimer=()=>{setTimerExpired(true)}
   const nav = useNavigate();
 
   // Retrieve attended questions from session storage on mount
@@ -45,6 +47,12 @@ function Test() {
       document.removeEventListener('fullscreenchange', handleFullScreenChange);
     };
   }, [id, nav]);
+
+  useEffect(()=>{
+    if(TimerExpired){
+      nav('/auth')
+    }
+  },[TimerExpired])
 
   const handleOptionChange = (event) => {
     setSelectedOption(event.target.value);
@@ -100,7 +108,7 @@ function Test() {
           </p>
         </div>
         <div className="col-start-4">
-          <TimerApp timerDuration={600} />
+          <TimerApp timerDuration={5} helper={changeTimer}/>
         </div>
         <div className="row-span-4 col-start-4 row-start-2">
           <p>Question Palette</p>

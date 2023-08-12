@@ -14,7 +14,7 @@ function Landingpage() {
   const handleCameraPermissionChange = () => {
     if (!cameraPermission) {
       navigator.mediaDevices
-        .getUserMedia({ video: true, audio: true }) // Request both camera and audio
+        .getUserMedia({ video: true, audio: true })
         .then((stream) => {
           console.log("Camera and microphone permissions granted");
           setCameraPermission(true);
