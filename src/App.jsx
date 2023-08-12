@@ -24,7 +24,7 @@ function App() {
       <Route path="/test/:id" element={<Test />} />
       <Route path="/test/success" element={<Success />} />
       <Route path="/test/fail" element={<Fail />} />
-      <Route path="/recordtest" element={<TestRecording />} />
+      {/* <Route path="/recordtest" element={<TestRecording />} /> */}
       <Route path='/*' element={<Fournotfour />} />
     </Routes>
     </>
