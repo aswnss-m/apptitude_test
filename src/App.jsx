@@ -8,7 +8,7 @@ import Landingpage from './Pages/Landingpage'
 import Test from './Pages/Test'
 import Success from './Pages/Success'
 import Fail from './Pages/Fail'
-import Fournotfour from './Pages/fournotfour'
+import Fournotfour from './Pages/Fournotfour'
 
 function App() {
 
