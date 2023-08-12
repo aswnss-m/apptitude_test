@@ -9,6 +9,7 @@ import Test from './Pages/Test'
 import Success from './Pages/Success'
 import Fail from './Pages/Fail'
 import Fournotfour from './Pages/Fournotfour'
+import TestRecording from './Pages/TestRecording'
 
 function App() {
 
@@ -23,6 +24,7 @@ function App() {
       <Route path="/test/:id" element={<Test />} />
       <Route path="/test/success" element={<Success />} />
       <Route path="/test/fail" element={<Fail />} />
+      <Route path="/recordtest" element={<TestRecording />} />
       <Route path='/*' element={<Fournotfour />} />
     </Routes>
     </>

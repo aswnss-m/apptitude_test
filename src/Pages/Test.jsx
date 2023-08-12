@@ -1,52 +1,54 @@
-import React, { useState, useEffect} from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useParams } from 'react-router-dom';
 import TimerApp from '../components/TimerApp';
 import { questions } from '../constants';
 import { useNavigate } from 'react-router-dom';
 
 function Test() {
-
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [selectedOption, setSelectedOption] = useState('');
   const [attendedQuestions, setAttendedQuestions] = useState(new Set());
+  const [recording, setRecording] = useState(false);
+  const mediaRecorderRef = useRef(null);
   const [qids, setQIds] = useState(new Set());
+  const [chunks, setChunks] = useState([]);
   const { id } = useParams();
   const [TimerExpired, setTimerExpired] = useState(false)
   const changeTimer=()=>{setTimerExpired(true)}
   const nav = useNavigate();
 
-  // Retrieve attended questions from session storage on mount
+  // Retrieve attended questions from session storage and add event listeners
   useEffect(() => {
-    // Retrieve attended questions from session storage on mount
     const attendedQuestionsList = JSON.parse(sessionStorage.getItem('attendedQuestions')) || [];
     const attendedSet = new Set(attendedQuestionsList.map(answer => answer.questionId));
     setAttendedQuestions(attendedSet);
     setQIds(new Set(attendedSet));
 
-    // Add event listener for visibility change
     const handleVisibilityChange = () => {
       if (document.hidden) {
-        // User switched tabs, navigate to /test/fail
         nav('/test/fail');
       }
     };
-  
+
     const handleFullScreenChange = () => {
       if (!document.fullscreenElement) {
-        // User exited full screen, navigate to /test/fail
         nav('/test/fail');
       }
     };
-  
+
     document.addEventListener('visibilitychange', handleVisibilityChange);
     document.addEventListener('fullscreenchange', handleFullScreenChange);
-  
+
     return () => {
-      // Remove the event listeners when component unmounts
       document.removeEventListener('visibilitychange', handleVisibilityChange);
       document.removeEventListener('fullscreenchange', handleFullScreenChange);
+      if (mediaRecorderRef.current) {
+        mediaRecorderRef.current.stop();
+        setRecording(false);
+        mediaRecorderRef.current = null;
+      }
     };
-  }, [id, nav]);
+  }, [id, nav, recording]);
 
   useEffect(()=>{
     if(TimerExpired){
@@ -84,20 +86,48 @@ function Test() {
 
       const nextQuestion = currentQuestion + 1;
       const totalQuestions = questions.length;
-
       if (nextQuestion < totalQuestions) {
         setCurrentQuestion(nextQuestion);
         nav(`/test/${nextQuestion}`);
       } else {
-        const allQuestionsAnswered = attendedQuestions.size === totalQuestions-1;
+        const allQuestionsAnswered = attendedQuestions.size === totalQuestions - 1;
         if (allQuestionsAnswered) {
-          nav('/test/success'); 
+          if (mediaRecorderRef.current) {
+            mediaRecorderRef.current.stop();
+            const blob = new Blob(chunks, { type: 'video/webm' });
+            const videoURL = window.URL.createObjectURL(blob);
+            console.log(videoURL);
+            setRecording(false);
+            setChunks([]);
+            mediaRecorderRef.current = null;
+          }
+          nav('/test/success');
         }
       }
     }
   };
 
-  
+  // Recording code
+  useEffect(() => {
+    if (!recording) {
+      if (mediaRecorderRef.current) {
+        mediaRecorderRef.current.stop();
+        mediaRecorderRef.current = null;
+      }
+      const cam = navigator.mediaDevices.getUserMedia({ audio: true, video: true });
+      cam.then((stream) => {
+        const mediaRecorder = new MediaRecorder(stream);
+        mediaRecorderRef.current = mediaRecorder;
+        mediaRecorder.ondataavailable = (e) => {
+          if (e.data.size > 0) {
+            setChunks((prevChunks) => [...prevChunks, e.data]);
+          }
+        };
+        mediaRecorder.start();
+        setRecording(true);
+      });
+    }
+  }, []);
   return (
     <div className='flex px-4 py-2 min-h-screen'>
       <div className="grid grid-cols-4 grid-rows-5 gap-4 p-4">
