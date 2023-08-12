@@ -7,6 +7,7 @@ import Auth from './Pages/Auth'
 import Landingpage from './Pages/Landingpage'
 import Test from './Pages/Test'
 import Success from './Pages/Success'
+import Fournotfour from './Pages/fournotfour'
 
 function App() {
 
@@ -20,6 +21,7 @@ function App() {
       <Route path="/landingpage" element={<Landingpage />} /> 
       <Route path="/test/:id" element={<Test />} />
       <Route path="/test/success" element={<Success />} />
+      <Route path='/*' element={<Fournotfour />} />
     </Routes>
     </>
   )
