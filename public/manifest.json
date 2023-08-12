@@ -1,0 +1,12 @@
+{
+    "short_name": "Daya",
+    "name": "Daya Aptitude test",
+    "icons": [
+      {
+        "src": "/logo.svg",
+        "type": "image/svg+xml",
+        "sizes": "512x512"
+      }
+    ],
+    "author" : "Invenio"
+  }
